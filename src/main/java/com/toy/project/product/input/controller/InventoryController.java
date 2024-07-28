@@ -79,7 +79,7 @@ public class InventoryController {
     }
 
     @Operation(
-            operationId = "modifyInventory",
+            operationId = "deleteInventory",
             summary = "상품 재고 단건 삭제 API",
             description = "상품 재고 단건 삭제 API",
             tags = {"inventory"},

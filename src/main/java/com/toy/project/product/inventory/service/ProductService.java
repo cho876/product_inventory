@@ -4,6 +4,7 @@ import com.toy.project.product.config.exception.DataRetrievalException;
 import com.toy.project.product.input.dto.ProductRequestDto;
 import com.toy.project.product.inventory.dto.entity.Products;
 import com.toy.project.product.inventory.repository.ProductRepository;
+import com.toy.project.product.output.dto.CategoryListResponseDto;
 import com.toy.project.product.output.dto.ProductListResponseDto;
 import com.toy.project.product.output.dto.ProductResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
 
-    /**
-     * 상품 단건 추가
-     */
+    /** 상품 단건 추가 */
     public String addProductInfo(ProductRequestDto requestDto) {
         String resMsg = "OK";
 
@@ -44,9 +43,7 @@ public class ProductService {
         return resMsg;
     }
 
-    /**
-     * 상품 단건 수정
-     */
+    /** 상품 단건 수정 */
     public String modifyProductInfo(ProductRequestDto requestDto) {
         String resMsg = "OK";
 
@@ -64,9 +61,7 @@ public class ProductService {
         return resMsg;
     }
 
-    /**
-     * 상품 단건 삭제
-     */
+    /** 상품 단건 삭제 */
     public String deleteProductInfo(String productId) {
         String resMsg = "OK";
 
@@ -83,9 +78,7 @@ public class ProductService {
         return resMsg;
     }
 
-    /**
-     * 상품 복수건 추가
-     */
+    /** 상품 복수건 추가 */
     public String addProductInfoList(List<ProductRequestDto> requestDtoList) {
         String resMsg = "OK";
 
@@ -104,9 +97,7 @@ public class ProductService {
         return resMsg;
     }
 
-    /**
-     * 상품 복수건 수정
-     */
+    /** 상품 복수건 수정 */
     public String modifyProductInfoList(List<ProductRequestDto> requestDtoList) {
         String resMsg = "OK";
 
@@ -126,17 +117,15 @@ public class ProductService {
         return resMsg;
     }
 
-    /**
-     * 대분류 기준, 상품 리스트 조회
-     */
-    public ProductListResponseDto retrieveCategoryList(String catagory) {
-        ProductListResponseDto listResponseDto = new ProductListResponseDto();
+    /** 대분류 기준, 상품 리스트 조회 */
+    public CategoryListResponseDto retrieveCategoryList(int page, int recordSize, String catagory) throws Exception {
+        CategoryListResponseDto listResponseDto = null;
 
         try {
             List<Products> retrievedList = productRepository.retrieveProductListByCategory(catagory);
             ifEmptyListThrowException(retrievedList);
 
-            listResponseDto.setResponseFromProductsList(retrievedList);
+            listResponseDto = this.makePage(page, recordSize, retrievedList);
         } catch (Exception e) {
             log.info(e.toString());
             throw e;
@@ -145,17 +134,15 @@ public class ProductService {
         return listResponseDto;
     }
 
-    /**
-     * 소분류 기준, 상품 리스트 조회
-     */
-    public ProductListResponseDto retrieveSubCategoryList(String category, String subCategory) {
-        ProductListResponseDto listResponseDto = new ProductListResponseDto();
+    /** 소분류 기준, 상품 리스트 조회 */
+    public CategoryListResponseDto retrieveSubCategoryList(int page, int recordSize, String category, String subCategory) throws Exception {
+        CategoryListResponseDto listResponseDto = null;
 
         try {
             List<Products> retrievedList = productRepository.retrieveProductListBySubCategory(category, subCategory);
             ifEmptyListThrowException(retrievedList);
 
-            listResponseDto.setResponseFromProductsList(retrievedList);
+            listResponseDto = this.makePage(page, recordSize, retrievedList);
         } catch (Exception e) {
             log.info(e.toString());
             throw e;
@@ -164,9 +151,7 @@ public class ProductService {
         return listResponseDto;
     }
 
-    /**
-     * 상품번호 기준, 단건 조회
-     */
+    /** 상품번호 기준, 단건 조회 */
     public ProductResponseDto retrieveProductUnit(String productId) {
         ProductResponseDto responseDto;
 
@@ -183,9 +168,7 @@ public class ProductService {
         return responseDto;
     }
 
-    /**
-     * 상품번호 기준, 리스트 조회
-     */
+    /** 상품번호 기준, 리스트 조회 */
     public ProductListResponseDto retrieveProductList(List<String> productIdList) {
         ProductListResponseDto listResponseDto = new ProductListResponseDto();
 
@@ -202,9 +185,7 @@ public class ProductService {
         return listResponseDto;
     }
 
-    /**
-     * DB에 기존재하는 상품번호 리스트 반환
-     */
+    /** DB에 기존재하는 상품번호 리스트 반환 */
     private List<String> hasProductsInDatabase(List<ProductRequestDto> requestDtoList) {
         List<String> baseProductIdList = this.getProductIdList(requestDtoList);
 
@@ -252,4 +233,19 @@ public class ProductService {
         }
     }
 
+    /** 페이징 처리 */
+    public CategoryListResponseDto makePage(int page, int recordSize, List<Products> productsList) {
+        CategoryListResponseDto resDto = new CategoryListResponseDto();
+
+        int startIndex = (page - 1) * recordSize;
+        int endIndex = Math.min(startIndex + recordSize, productsList.size());
+
+        if (startIndex >= productsList.size()) {
+            resDto.makeWithPaging(page, recordSize, Collections.emptyList());
+        } else {
+            resDto.makeWithPaging(page, recordSize, productsList.subList(startIndex, endIndex));
+        }
+
+        return resDto;
+    }
 }

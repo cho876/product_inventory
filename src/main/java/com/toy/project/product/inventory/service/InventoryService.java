@@ -33,9 +33,7 @@ public class InventoryService {
 
 
 
-    /**
-     * 상품 재고 추가
-     */
+    /** 상품 재고 추가 */
     public String addInventoryInfo(InventoryRequestDto inventoryRequestDto) {
         String resMsg = "OK";
 
@@ -53,9 +51,7 @@ public class InventoryService {
         return resMsg;
     }
 
-    /**
-     * 상품 재고 수정
-     */
+    /**  상품 재고 수정 */
     public String modifyInventoryInfo(InventoryRequestDto requestDto) {
         String resMsg = "OK";
 
@@ -73,9 +69,7 @@ public class InventoryService {
         return resMsg;
     }
 
-    /**
-     * 상품 재고 수정
-     */
+    /** 상품 재고 수정 */
     public String deleteInventoryInfo(String productId) {
         String resMsg = "OK";
 
@@ -92,9 +86,7 @@ public class InventoryService {
         return resMsg;
     }
 
-    /**
-     * 상품 재고 차감
-     */
+    /** 상품 재고 차감 */
     public String decreaseInventory(DecreaseInventoryRequestDto decreaseInventoryRequestDto) {
         String resMsg = "OK";
 
@@ -113,9 +105,7 @@ public class InventoryService {
         return resMsg;
     }
 
-    /**
-     * 상품번호 기준, 단건 조회
-     */
+    /** 상품번호 기준, 단건 조회 */
     public InventoryResponseDto retrieveInventoryUnit(String productId) {
         InventoryResponseDto responseDto;
 
@@ -132,9 +122,7 @@ public class InventoryService {
         return responseDto;
     }
 
-    /**
-     * 상품번호 리스트 기준, 복수건 조회
-     */
+    /** 상품번호 리스트 기준, 복수건 조회 */
     public InventoryListResponseDto retrieveInventoryList(List<String> productIdList) {
         InventoryListResponseDto listResponseDto = new InventoryListResponseDto();
 

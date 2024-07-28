@@ -6,7 +6,6 @@ import com.toy.project.product.inventory.dto.entity.ProductInventory;
 import com.toy.project.product.inventory.dto.entity.Products;
 import com.toy.project.product.inventory.repository.jpa.InventoryJpaRepository;
 import com.toy.project.product.inventory.repository.jpa.ProductsJpaRepository;
-import com.toy.project.product.inventory.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.Chunk;

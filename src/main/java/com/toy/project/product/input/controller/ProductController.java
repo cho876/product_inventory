@@ -2,6 +2,7 @@ package com.toy.project.product.input.controller;
 
 import com.toy.project.product.input.dto.ProductRequestDto;
 import com.toy.project.product.inventory.service.ProductService;
+import com.toy.project.product.output.dto.CategoryListResponseDto;
 import com.toy.project.product.output.dto.ProductListResponseDto;
 import com.toy.project.product.output.dto.ProductResponseDto;
 import com.toy.project.product.output.dto.ResponseDto;
@@ -179,7 +180,7 @@ public class ProductController {
 
 
     @Operation(
-            operationId = "retrieveInventoryList",
+            operationId = "retrieveProductList",
             summary = "상품 복수건 조회 API",
             description = "상품 복수건 조회 API",
             tags = {"product"},
@@ -204,7 +205,7 @@ public class ProductController {
     }
 
     @Operation(
-            operationId = "modifyProductList",
+            operationId = "retrieveCategoryList",
             summary = "대분류 상품 리스트 조회 API",
             description = "대분류 내, 포함된 상품 리스트 조회 API",
             tags = {"product"},
@@ -216,11 +217,13 @@ public class ProductController {
             }
     )
     @GetMapping("/v1/category/{category}")
-    public ResponseDto<ProductListResponseDto> retrieveCategoryList(@PathVariable("category") String category) {
-        ResponseDto<ProductListResponseDto> listResponseDto = new ResponseDto<>();
+    public ResponseDto<CategoryListResponseDto> retrieveCategoryList(@PathVariable("category") String category,
+                                                                     @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                     @RequestParam(value = "recordSize", defaultValue = "10") int recordSize) {
+        ResponseDto<CategoryListResponseDto> listResponseDto = new ResponseDto<>();
 
         try {
-            listResponseDto.initSuccess(productService.retrieveCategoryList(category));
+            listResponseDto.initSuccess(productService.retrieveCategoryList(page, recordSize, category));
         } catch (Exception ex) {
             listResponseDto.initFail(null, ex);
         }
@@ -230,7 +233,7 @@ public class ProductController {
 
 
     @Operation(
-            operationId = "modifyProductList",
+            operationId = "retrieveSubCategoryList",
             summary = "소분류 상품 리스트 조회 API",
             description = "소분류 내, 포함된 상품 리스트 조회 API",
             tags = {"product"},
@@ -242,16 +245,19 @@ public class ProductController {
             }
     )
     @GetMapping("/v1/category/{category}/sub-category/{subcategory}")
-    public ResponseDto<ProductListResponseDto> retrieveSubCategoryList(@PathVariable("category") String category,
-                                                                       @PathVariable("subcategory") String subcategory) {
-        ResponseDto<ProductListResponseDto> listResponseDto = new ResponseDto<>();
+    public ResponseDto<CategoryListResponseDto> retrieveSubCategoryList(@PathVariable("category") String category,
+                                                                       @PathVariable("subcategory") String subcategory,
+                                                                       @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                        @RequestParam(value = "recordSize", defaultValue = "10") int recordSize) {
+        ResponseDto<CategoryListResponseDto> listResponseDto = new ResponseDto<>();
 
         try {
-            listResponseDto.initSuccess(productService.retrieveSubCategoryList(category, subcategory));
+            listResponseDto.initSuccess(productService.retrieveSubCategoryList(page, recordSize, category, subcategory));
         } catch (Exception ex) {
             listResponseDto.initFail(null, ex);
         }
 
         return listResponseDto;
     }
+
 }

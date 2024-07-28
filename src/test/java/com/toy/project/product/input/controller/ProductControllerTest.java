@@ -4,9 +4,7 @@ package com.toy.project.product.input.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.toy.project.product.input.dto.ProductRequestDto;
 import com.toy.project.product.inventory.service.ProductService;
-import com.toy.project.product.output.dto.ProductListResponseDto;
-import com.toy.project.product.output.dto.ProductResponseDto;
-import com.toy.project.product.output.dto.ResponseDto;
+import com.toy.project.product.output.dto.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -204,16 +202,18 @@ public class ProductControllerTest {
     @Test
     public void testRetrieveCategoryList_success() throws Exception {
         // Service 응답전문
-        ProductListResponseDto resDto = new ProductListResponseDto(
-                Arrays.asList(new ProductResponseDto(), new ProductResponseDto()));
+        CategoryListResponseDto resDto = new CategoryListResponseDto(
+                1, 10, Arrays.asList(new CategoryResponseDto(), new CategoryResponseDto()));
 
         // Controller 응답전문
-        ResponseDto<ProductListResponseDto> successResponse = new ResponseDto<>();
+        ResponseDto<CategoryListResponseDto> successResponse = new ResponseDto<>();
         successResponse.initSuccess(resDto);
 
-        when(productService.retrieveCategoryList(any(String.class))).thenReturn(resDto);
+        when(productService.retrieveCategoryList(anyInt(), anyInt(), anyString())).thenReturn(resDto);
 
         mockMvc.perform(get("/product/v1/category/{category}", "10000")
+                        .param("page", "1")
+                        .param("recordSize", "10")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(successResponse.getStatus()))
@@ -221,23 +221,25 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.data").isNotEmpty());
 
 
-        verify(productService, times(1)).retrieveCategoryList(any(String.class));
+        verify(productService, times(1)).retrieveCategoryList(anyInt(), anyInt(), anyString());
     }
 
     @DisplayName("소분류 기준, 상품 리스트 조회 TC")
     @Test
     public void testRetrieveSubCategoryList_success() throws Exception {
         // Service 응답전문
-        ProductListResponseDto resDto = new ProductListResponseDto(
-                Arrays.asList(new ProductResponseDto(), new ProductResponseDto()));
+        CategoryListResponseDto resDto = new CategoryListResponseDto(
+                1, 10, Arrays.asList(new CategoryResponseDto(), new CategoryResponseDto()));
 
         // Controller 응답전문
-        ResponseDto<ProductListResponseDto> successResponse = new ResponseDto<>();
+        ResponseDto<CategoryListResponseDto> successResponse = new ResponseDto<>();
         successResponse.initSuccess(resDto);
 
-        when(productService.retrieveSubCategoryList(any(String.class),any(String.class))).thenReturn(resDto);
+        when(productService.retrieveSubCategoryList(anyInt(), anyInt(), anyString(), anyString())).thenReturn(resDto);
 
         mockMvc.perform(get("/product/v1/category/{category}/sub-category/{subcategory}", "10000","1001")
+                        .param("page", "1")
+                        .param("recordSize", "10")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(successResponse.getStatus()))
@@ -245,6 +247,6 @@ public class ProductControllerTest {
                 .andExpect(jsonPath("$.data").isNotEmpty());
 
 
-        verify(productService, times(1)).retrieveSubCategoryList(any(String.class),any(String.class));
+        verify(productService, times(1)).retrieveSubCategoryList(anyInt(), anyInt(), anyString(), anyString());
     }
 }
