@@ -1,0 +1,44 @@
+# ??? ??? ?? ??
+spring:
+  batch:
+    jdbc:
+      initialize-schema: always
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:kwonnee
+    username: kwonnee
+    password: qwerty1!
+
+  h2:
+    console:
+      enabled: true
+      path: /CheilDB
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+
+logging:
+  level:
+    jdbc: 'OFF'
+    jdbc.sqlonly: 'OFF'
+    jdbc.sqltiming: DEBUG
+    jdbc.audit: 'OFF'
+    jdbc.resultset: 'OFF'
+    jdbc.resultsettable: 'OFF'
+    jdbc.connection: 'OFF'
+
+cj:
+  csv:
+    dummy-path: csv/sampledata.csv
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
